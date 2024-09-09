@@ -19,16 +19,16 @@ import { Outlet } from 'react-router-dom';
 
 const drawerWidth = 240;
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
-  window?: () => Window;
-}
+// interface Props {
+//   /**
+//    * Injected by the documentation to work in an iframe.
+//    * Remove this when copying and pasting into your project.
+//    */
+//   window?: () => Window;
+// }
 
-export default function ResponsiveDrawer(props: Props) {
-  const { window } = props;
+export default function ResponsiveDrawer() {
+  // const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -80,11 +80,13 @@ export default function ResponsiveDrawer(props: Props) {
   );
 
   // Remove this const when copying and pasting into your project.
-  const container = window !== undefined ? () => window().document.body : undefined;
+  // const container = window !== undefined ? () => window().document.body : undefined;
 
+  // 実際に画面に表示される部分
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+      {/* ヘッター */}
       <AppBar
         position="fixed"
         sx={{
@@ -107,14 +109,15 @@ export default function ResponsiveDrawer(props: Props) {
           </Typography>
         </Toolbar>
       </AppBar>
+       {/* サイドバー */}
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
+        {/* モバイル用のDrawer */}
+       <Drawer
+          // container={container}
           variant="temporary"
           open={mobileOpen}
           onTransitionEnd={handleDrawerTransitionEnd}
@@ -122,6 +125,7 @@ export default function ResponsiveDrawer(props: Props) {
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
+          // インラインでCSSを適用している
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
@@ -129,17 +133,19 @@ export default function ResponsiveDrawer(props: Props) {
         >
           {drawer}
         </Drawer>
+        {/* PC用のDrawer */}
         <Drawer
-          variant="permanent"
+          variant="permanent" // 常に固定される
           sx={{
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
           open
         >
-          {drawer}
+          {drawer} 
         </Drawer>
       </Box>
+       {/* メインコンテンツ */}
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
