@@ -106,7 +106,7 @@ export const SideBar = ({
   return (
     <Box
       component="nav"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}
       aria-label="mailbox folders"
     >
       {/* 모바일용 */}
@@ -124,7 +124,8 @@ export const SideBar = ({
         sx={{
           // xs: 0픽셀이상
           // sm: 600픽셀 이상
-          display: { xs: "block", sm: "none" }, // <= 브레이크포인트
+          // md: 900픽셀
+          display: { xs: "block", md: "none" }, // <= 브레이크포인트
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: drawerWidth,
@@ -136,8 +137,9 @@ export const SideBar = ({
       {/* PC용 */}
       <Drawer
         variant="permanent"
+        // sm 600, md 900
         sx={{
-          display: { xs: "none", sm: "block" },
+          display: { xs: "none", md: "block" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: drawerWidth,
