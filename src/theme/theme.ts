@@ -5,6 +5,7 @@ import {
 } from "@mui/material/styles";
 import { blue, red, green } from "@mui/material/colors";
 
+//
 declare module "@mui/material/styles" {
   interface Palette {
     incomeColor: PaletteColor;
