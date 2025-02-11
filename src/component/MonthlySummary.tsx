@@ -3,6 +3,10 @@ import { Grid2, Card, CardContent, Stack, Typography } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+
+/**
+ * 한달간의 수입, 지출, 잔액을 표시하는 컴포넌트
+ */
 const MonthlySummary = () => {
   return (
     // flex적용
@@ -19,7 +23,8 @@ const MonthlySummary = () => {
       <Grid2 size={{ xs: 4 }} display={"flex"} flexDirection={"column"}>
         <Card
           sx={{
-            bgcolor: "blue",
+            // theme에서 지정한 커스텀 pallete사용
+            bgcolor: (theme) => theme.palette.incomeColor.main,
             color: "white",
             borderRadius: "10px",
             flexGrow: 1,
@@ -40,7 +45,7 @@ const MonthlySummary = () => {
                 fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" },
               }}
             >
-              300円aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+              300円
             </Typography>
           </CardContent>
         </Card>
@@ -49,7 +54,7 @@ const MonthlySummary = () => {
       <Grid2 size={{ xs: 4 }} display={"flex"} flexDirection={"column"}>
         <Card
           sx={{
-            bgcolor: "red",
+            bgcolor: (theme) => theme.palette.expenseColor.main,
             color: "white",
             borderRadius: "10px",
             flexGrow: 1,
@@ -80,7 +85,7 @@ const MonthlySummary = () => {
       <Grid2 size={{ xs: 4 }} display={"flex"} flexDirection={"column"}>
         <Card
           sx={{
-            bgcolor: "green",
+            bgcolor: (theme) => theme.palette.balanceColor.main,
             color: "white",
             borderRadius: "10px",
             flexGrow: 1,
