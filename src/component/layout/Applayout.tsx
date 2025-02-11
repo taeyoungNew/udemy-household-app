@@ -53,8 +53,8 @@ export default function ResponsiveDrawer() {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
         }}
       >
         <Toolbar>
@@ -64,14 +64,14 @@ export default function ResponsiveDrawer() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: { md: "none" } }}
           >
             {/* 햄버거아이콘 */}
             <MenuIcon />
           </IconButton>
           {/* 헤더의 글씨 */}
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            TypeScript X React 家計簿
           </Typography>
         </Toolbar>
       </AppBar>
@@ -88,7 +88,7 @@ export default function ResponsiveDrawer() {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
         }}
       >
         <Toolbar />
