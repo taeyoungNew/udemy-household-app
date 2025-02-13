@@ -3,11 +3,19 @@ import { Grid2, Card, CardContent, Stack, Typography } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import { Transaction } from "../types";
+import { financeCalculations } from "../utils/financeCalculations";
+
+interface MonthlySummaryProps {
+  monthlyTransactions: Transaction[];
+}
 
 /**
  * 한달간의 수입, 지출, 잔액을 표시하는 컴포넌트
  */
-const MonthlySummary = () => {
+const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
+  const { income, expense, balance } = financeCalculations(monthlyTransactions);
+
   return (
     // flex적용
     <Grid2 container spacing={{ xs: 1, sm: 2 }} mb={2}>
@@ -45,7 +53,8 @@ const MonthlySummary = () => {
                 fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" },
               }}
             >
-              300円
+              <span>￥</span>
+              {income}
             </Typography>
           </CardContent>
         </Card>
@@ -76,7 +85,8 @@ const MonthlySummary = () => {
                 fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" },
               }}
             >
-              300円
+              <span>￥</span>
+              {expense}
             </Typography>
           </CardContent>
         </Card>
@@ -106,7 +116,8 @@ const MonthlySummary = () => {
                 fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" },
               }}
             >
-              300円
+              <span>￥</span>
+              {balance}
             </Typography>
           </CardContent>
         </Card>
