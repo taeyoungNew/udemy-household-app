@@ -15,6 +15,12 @@ import jaLocale from "@fullcalendar/core/locales/ja";
 // import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import "../calendar.css";
 import { EventContentArg } from "@fullcalendar/core";
+import { Balance, CalendarContent, Transaction } from "../types";
+import { calculateDailyBalances } from "../utils/financeCalculations";
+// import { Balance } from "@mui/icons-material";
+import { formatCurrency } from "../utils/formatting";
+
+// 각일일마다 이벤트를 표시
 const renderEventContent = (eventInfo: EventContentArg) => {
   return (
     <div>
@@ -30,27 +36,41 @@ const renderEventContent = (eventInfo: EventContentArg) => {
     </div>
   );
 };
-const Calendar = () => {
-  const events = [
-    {
-      title: "Meeting",
-      start: new Date(),
-      income: 400,
-      expense: 100,
-      balance: 300,
-    },
-  ];
+
+// 달력
+interface CalendarProps {
+  monthlyTransactions: Transaction[];
+}
+const Calendar = ({ monthlyTransactions }: CalendarProps) => {
+  const daliyBalances = calculateDailyBalances(monthlyTransactions);
+  const calendarEvents = createCalendarEvents(daliyBalances);
   // 1일 이벤트
+  console.log(calendarEvents);
 
   return (
     <FullCalendar
       locale={jaLocale} // 일본어
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"
-      events={events}
+      events={calendarEvents}
       eventContent={renderEventContent}
     />
   );
+};
+
+const createCalendarEvents = (
+  dailyBalances: Record<string, Balance>
+): CalendarContent[] => {
+  // recode타입도 Object.keys메서드로 key를 취득할수 있구나
+  return Object.keys(dailyBalances).map((date) => {
+    const { income, expense, balance } = dailyBalances[date];
+    return {
+      start: date,
+      income: formatCurrency(income),
+      expense: formatCurrency(expense),
+      balance: formatCurrency(balance),
+    };
+  });
 };
 
 export default Calendar;
