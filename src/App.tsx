@@ -58,6 +58,7 @@ function App() {
     fecheTransaction();
   }, []);
 
+  // 一月分のデータのみ取得
   const monthlyTransactions = transactions.filter((tran) => {
     // startsWith():해당문자열이 지정된 접두사로 시작하는지 여부를 확인
     // boolean값을 반환
@@ -84,7 +85,12 @@ function App() {
           */}
             <Route
               index
-              element={<Home monthlyTransactions={monthlyTransactions} />}
+              element={
+                <Home
+                  monthlyTransactions={monthlyTransactions}
+                  setCurrentMonth={setCurrentMonth}
+                />
+              }
             ></Route>
             <Route path="/report" element={<Report />}></Route>
             {/* "*"는 위의 path에 일치하지 않는 모든 기타 path를 의미 */}

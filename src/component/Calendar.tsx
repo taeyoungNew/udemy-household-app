@@ -1,23 +1,12 @@
 import FullCalendar from "@fullcalendar/react";
-// import {
-//   // Grid2,
-//   // Card,
-//   // CardContent,
-//   // Stack,
-//   // Typography,
-//   Box,
-// } from "@mui/material";
-// import React from "react";
+import React from "react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import jaLocale from "@fullcalendar/core/locales/ja";
-// import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-// import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-// import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import "../calendar.css";
-import { EventContentArg } from "@fullcalendar/core";
+import { DatesSetArg, EventContentArg } from "@fullcalendar/core";
 import { Balance, CalendarContent, Transaction } from "../types";
 import { calculateDailyBalances } from "../utils/financeCalculations";
-// import { Balance } from "@mui/icons-material";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { formatCurrency } from "../utils/formatting";
 
 // 각일일마다 이벤트를 표시
@@ -40,20 +29,38 @@ const renderEventContent = (eventInfo: EventContentArg) => {
 // 달력
 interface CalendarProps {
   monthlyTransactions: Transaction[];
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
 }
-const Calendar = ({ monthlyTransactions }: CalendarProps) => {
+const Calendar = ({
+  monthlyTransactions,
+  setCurrentMonth,
+  setCurrentDay,
+}: CalendarProps) => {
   const daliyBalances = calculateDailyBalances(monthlyTransactions);
   const calendarEvents = createCalendarEvents(daliyBalances);
-  // 1일 이벤트
-  console.log(calendarEvents);
+  // 달력을 넘길때 실행되는 함수
+  const handleDateSet = (datesetInfo: DatesSetArg) => {
+    // 이 함수가 실행될때마다 그 해당달의 월 일을 setCurrentMonth에 set한다.
+    setCurrentMonth(datesetInfo.view.currentStart);
+  };
 
+  // dateClick이 발생했을때 dateInfo에 그 날의 날짜데이터를 파라미터로 받는다.
+  const handleDateClick = (dateInfo: DateClickArg) => {
+    // console.log(dateInfo);
+    setCurrentDay(dateInfo.dateStr);
+  };
+
+  // 1일 이벤트
   return (
     <FullCalendar
       locale={jaLocale} // 일본어
-      plugins={[dayGridPlugin]}
+      plugins={[dayGridPlugin, interactionPlugin]}
       initialView="dayGridMonth"
       events={calendarEvents}
       eventContent={renderEventContent}
+      datesSet={handleDateSet} // 달력을 넘기는 버튼을 클릭시 이벤트발생
+      dateClick={handleDateClick} // 달력상의 각 일을 누르면 이벤트 발생
     />
   );
 };
