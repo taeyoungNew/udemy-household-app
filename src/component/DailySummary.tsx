@@ -1,7 +1,15 @@
 import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import React from "react";
+import { Transaction } from "../types";
+import { financeCalculations } from "../utils/financeCalculations";
+import { formatCurrency } from "../utils/formatting";
 
-const DailySummary = () => {
+interface DailySummaryProps {
+  dailyTran: Transaction[];
+}
+
+const DailySummary = ({ dailyTran }: DailySummaryProps) => {
+  const { income, expense, balance } = financeCalculations(dailyTran);
   return (
     <Box>
       <Grid2 container spacing={2}>
@@ -25,7 +33,7 @@ const DailySummary = () => {
                   wordBreak: "break-all",
                 }}
               >
-                ¥500
+                ¥ {formatCurrency(income)}
               </Typography>
             </CardContent>
           </Card>
@@ -48,7 +56,7 @@ const DailySummary = () => {
                   wordBreak: "break-all",
                 }}
               >
-                ¥300
+                ¥ {formatCurrency(expense)}
               </Typography>
             </CardContent>
           </Card>
@@ -71,7 +79,7 @@ const DailySummary = () => {
                   wordBreak: "break-all",
                 }}
               >
-                ¥200
+                ¥ {formatCurrency(balance)}
               </Typography>
             </CardContent>
           </Card>

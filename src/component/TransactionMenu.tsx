@@ -17,7 +17,14 @@ import NotesIcon from "@mui/icons-material/Notes";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import DailySummary from "./DailySummary";
-const TransactionMenu = () => {
+import { Transaction } from "../types";
+import { formatCurrency } from "../utils/formatting";
+
+interface TransactionMenuProp {
+  dailyTran: Transaction[];
+  currentDay: string;
+}
+const TransactionMenu = ({ dailyTran, currentDay }: TransactionMenuProp) => {
   const menuDrawerWidth = 320;
   return (
     // Drawer : 메뉴 전체를 감쌈
@@ -39,9 +46,11 @@ const TransactionMenu = () => {
       {/* Stack : 안의 요소들이 균등하게 정렬이 된다. */}
       <Stack sx={{ height: "100%" }} spacing={2}>
         {/* 날짜표시 */}
-        <Typography fontWeight={"fontWeightBold"}>日時： 2023-12-31</Typography>
+        <Typography fontWeight={"fontWeightBold"}>
+          日時： {currentDay}
+        </Typography>
         {/* 지출을 표시 */}
-        <DailySummary />
+        <DailySummary dailyTran={dailyTran} />
         {/* 内訳タイトル&内訳追加ボタン */}
         <Box
           sx={{
@@ -66,57 +75,59 @@ const TransactionMenu = () => {
           <List aria-label="取引履歴">
             <Stack spacing={2}>
               {/* ListItem : 하나의 거래내역 */}
-              <ListItem disablePadding>
-                <Card
-                  sx={{
-                    width: "100%",
-                    backgroundColor: (theme) =>
-                      theme.palette.expenseColor.light,
-                  }}
-                >
-                  <CardActionArea>
-                    <CardContent>
-                      <Grid2
-                        container
-                        spacing={1}
-                        alignItems="center"
-                        wrap="wrap"
-                      >
-                        <Grid2 size={{ xs: 1 }}>
-                          {/* icon */}
-                          <FastfoodIcon />
+              {dailyTran.map((el) => (
+                <ListItem disablePadding>
+                  <Card
+                    sx={{
+                      width: "100%",
+                      backgroundColor: (theme) =>
+                        theme.palette.expenseColor.light,
+                    }}
+                  >
+                    <CardActionArea>
+                      <CardContent>
+                        <Grid2
+                          container
+                          spacing={1}
+                          alignItems="center"
+                          wrap="wrap"
+                        >
+                          <Grid2 size={{ xs: 1 }}>
+                            {/* icon */}
+                            <FastfoodIcon />
+                          </Grid2>
+                          <Grid2 size={{ xs: 2.5 }}>
+                            <Typography
+                              variant="caption"
+                              display="block"
+                              gutterBottom
+                            >
+                              {el.category}
+                            </Typography>
+                          </Grid2>
+                          <Grid2 size={{ xs: 4 }}>
+                            <Typography variant="body2" gutterBottom>
+                              {el.content}
+                            </Typography>
+                          </Grid2>
+                          <Grid2 size={{ xs: 4.5 }}>
+                            <Typography
+                              gutterBottom
+                              textAlign={"right"}
+                              color="text.secondary"
+                              sx={{
+                                wordBreak: "break-all",
+                              }}
+                            >
+                              {formatCurrency(el.amount)}
+                            </Typography>
+                          </Grid2>
                         </Grid2>
-                        <Grid2 size={{ xs: 2.5 }}>
-                          <Typography
-                            variant="caption"
-                            display="block"
-                            gutterBottom
-                          >
-                            食費
-                          </Typography>
-                        </Grid2>
-                        <Grid2 size={{ xs: 4 }}>
-                          <Typography variant="body2" gutterBottom>
-                            卵
-                          </Typography>
-                        </Grid2>
-                        <Grid2 size={{ xs: 4.5 }}>
-                          <Typography
-                            gutterBottom
-                            textAlign={"right"}
-                            color="text.secondary"
-                            sx={{
-                              wordBreak: "break-all",
-                            }}
-                          >
-                            ¥300
-                          </Typography>
-                        </Grid2>
-                      </Grid2>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </ListItem>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </ListItem>
+              ))}
             </Stack>
           </List>
         </Box>
