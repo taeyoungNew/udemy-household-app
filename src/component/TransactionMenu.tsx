@@ -77,7 +77,7 @@ const TransactionMenu = ({ dailyTran, currentDay }: TransactionMenuProp) => {
             <Stack spacing={2}>
               {/* ListItem : 하나의 거래내역 */}
               {dailyTran.map((el) => (
-                <ListItem disablePadding>
+                <ListItem key={el.id} disablePadding>
                   <Card
                     sx={{
                       width: "100%",
