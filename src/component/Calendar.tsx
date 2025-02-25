@@ -54,7 +54,7 @@ const Calendar = ({
     // 이 함수가 실행될때마다 그 해당달의 월 일을 setCurrentMonth에 set한다.
     setCurrentMonth(currentMonth);
     // 현재 캘린터가 이달인지 확인
-    if (isSameMonth(todayDate, currentMonth)) setCurrentDay(today);
+    if (isSameMonth(todayDate, currentMonth)) setCurrentDay(today); // true면 왼쪽
   };
 
   // dateClick이 발생했을때 dateInfo에 그 날의 날짜데이터를 파라미터로 받는다.
