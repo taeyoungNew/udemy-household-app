@@ -24,8 +24,13 @@ import IconComponents from "./common/IconComponents";
 interface TransactionMenuProp {
   dailyTran: Transaction[];
   currentDay: string;
+  onAddTranForm: () => void;
 }
-const TransactionMenu = ({ dailyTran, currentDay }: TransactionMenuProp) => {
+const TransactionMenu = ({
+  dailyTran,
+  currentDay,
+  onAddTranForm,
+}: TransactionMenuProp) => {
   const menuDrawerWidth = 320;
   return (
     // Drawer : 메뉴 전체를 감쌈
@@ -67,7 +72,11 @@ const TransactionMenu = ({ dailyTran, currentDay }: TransactionMenuProp) => {
             <Typography variant="body1">内訳</Typography>
           </Box>
           {/* 右側の追加ボタン */}
-          <Button startIcon={<AddCircleIcon />} color="primary">
+          <Button
+            onClick={onAddTranForm}
+            startIcon={<AddCircleIcon />}
+            color="primary"
+          >
             内訳を追加
           </Button>
         </Box>
