@@ -12,16 +12,30 @@ import {
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood"; //食事アイコン
+import { Controller, useForm } from "react-hook-form";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
   isEntryDrawerOpen: boolean;
+  currentDay: string;
 }
 const TransactionForm = ({
   onCloseForm,
   isEntryDrawerOpen,
+  currentDay,
 }: TransactionFormProp) => {
   const formWidth = 320;
+
+  const { control } = useForm({
+    // 리액트훅폼의 각 네임마다 디폴트값을 할당할수 있다.
+    defaultValues: {
+      type: "expense",
+      date: currentDay,
+      amount: 0,
+      category: "",
+      content: "",
+    },
+  });
   return (
     <Box
       sx={{
@@ -59,34 +73,77 @@ const TransactionForm = ({
       <Box component={"form"}>
         {/* Stack안의 요소들이 균등하게 배치 */}
         <Stack spacing={2}>
+          {/* 収支切り替えボタンをリアクトフックボタンで管理する */}
           {/* 収支切り替えボタン */}
-          <ButtonGroup fullWidth>
-            <Button variant={"contained"} color="error">
-              支出
-            </Button>
-            <Button>収入</Button>
-          </ButtonGroup>
+          <Controller
+            name="type"
+            control={control}
+            render={({ field }) => {
+              return (
+                <ButtonGroup fullWidth>
+                  <Button variant={"contained"} color="error">
+                    支出
+                  </Button>
+                  <Button>収入</Button>
+                </ButtonGroup>
+              );
+            }}
+          />
+
           {/* 日付 */}
-          <TextField
-            label="日付"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
+          <Controller
+            name="date"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextField
+                  {...field}
+                  label="日付"
+                  type="date"
+                  // InputLabelProps={{
+                  //   shrink: true,
+                  // }}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                  }}
+                />
+              );
             }}
           />
           {/* カテゴリ */}
-          <TextField id="カテゴリ" label="カテゴリ" select value={"食費"}>
-            <MenuItem value={"食費"}>
-              <ListItemIcon>
-                <FastfoodIcon />
-              </ListItemIcon>
-              食費
-            </MenuItem>
-          </TextField>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} id="カテゴリ" label="カテゴリ" select>
+                <MenuItem value={"食費"}>
+                  <ListItemIcon>
+                    <FastfoodIcon />
+                  </ListItemIcon>
+                  食費
+                </MenuItem>
+              </TextField>
+            )}
+          />
+
           {/* 金額 */}
-          <TextField label="金額" type="number" />
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="金額" type="number" />
+            )}
+          />
+
           {/* 内容 */}
-          <TextField label="内容" type="text" />
+          <Controller
+            name="content"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="内容" type="text" />
+            )}
+          />
+
           {/* 保存ボタン */}
           <Button type="submit" variant="contained" color={"primary"} fullWidth>
             保存
@@ -97,3 +154,6 @@ const TransactionForm = ({
   );
 };
 export default TransactionForm;
+function userForm() {
+  throw new Error("Function not implemented.");
+}
