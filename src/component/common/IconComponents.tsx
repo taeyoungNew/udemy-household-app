@@ -9,9 +9,9 @@ import SportsTennisIcon from "@mui/icons-material/SportsTennis";
 import AlarmIcon from "@mui/icons-material/Alarm";
 import WorkIcon from "@mui/icons-material/Work";
 
-import { IncomCategory, ExpenseCategory } from "../../types";
+import { IncomeCategory, ExpenseCategory } from "../../types";
 
-const IconComponents: Record<IncomCategory | ExpenseCategory, JSX.Element> = {
+const IconComponents: Record<IncomeCategory | ExpenseCategory, JSX.Element> = {
   食費: <FastfoodIcon />,
   お小遣い: <SavingsIcon />,
   交際費: <Diversity3Icon />,
