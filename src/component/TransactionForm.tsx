@@ -9,17 +9,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood"; //食事アイコン
+import AlarmIcon from "@mui/icons-material/Alarm";
+import AddHomeIcon from "@mui/icons-material/AddHome";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import SportsTennisIcon from "@mui/icons-material/SportsTennis";
+import TrainIcon from "@mui/icons-material/Train";
+import WorkIcon from "@mui/icons-material/Work";
+import SavinsIcon from "@mui/icons-material/Savings";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import { Controller, useForm } from "react-hook-form";
+import { ExpenseCategory, IncomeCategory } from "../types";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
   isEntryDrawerOpen: boolean;
   currentDay: string;
 }
-
+interface CategoryItem {
+  label: IncomeCategory | ExpenseCategory;
+  icon: JSX.Element; // Mui는 React의 컴포넌트이므로 해당 타입으로 지정
+}
 type IncomeExpense = "income" | "expense";
 
 const TransactionForm = ({
@@ -28,7 +40,22 @@ const TransactionForm = ({
   currentDay,
 }: TransactionFormProp) => {
   const formWidth = 320;
+  const expenseCategories: CategoryItem[] = [
+    { label: "食費", icon: <FastfoodIcon fontSize="small" /> },
+    { label: "日用品", icon: <AlarmIcon fontSize="small" /> },
+    { label: "住居費", icon: <AddHomeIcon fontSize="small" /> },
+    { label: "交際費", icon: <Diversity3Icon fontSize="small" /> },
+    { label: "娯楽", icon: <SportsTennisIcon fontSize="small" /> },
+    { label: "共通費", icon: <TrainIcon fontSize="small" /> },
+  ];
 
+  const IncomeCategories: CategoryItem[] = [
+    { label: "給与", icon: <WorkIcon fontSize="small" /> },
+    { label: "副収入", icon: <SavinsIcon fontSize="small" /> },
+    { label: "お小遣い", icon: <AddBusinessIcon fontSize="small" /> },
+  ];
+
+  const [categories, setCategories] = useState(expenseCategories);
   const { control, setValue, watch } = useForm({
     // 리액트훅폼의 각 네임마다 디폴트값을 할당할수 있다.
     defaultValues: {
@@ -46,6 +73,14 @@ const TransactionForm = ({
 
   // 감시할 form의 이름을 인수로 넣는다.
   const currentType = watch("type");
+
+  // useEffect로 currentType의 값이 바뀌면 setCategories에 새로운 categories의 값을 대입
+  useEffect(() => {
+    const newCategories =
+      currentType === "expense" ? expenseCategories : IncomeCategories;
+    console.log(newCategories);
+    setCategories(newCategories);
+  }, [currentType]);
 
   // useEffect를 활용해서 달력상의 날짜를 클릭했을때
   // form의 날짜도 바뀐다.
@@ -97,6 +132,7 @@ const TransactionForm = ({
             control={control}
             render={({ field }) => {
               return (
+                // 지출 수입 버튼ㄴ
                 <ButtonGroup fullWidth>
                   <Button
                     variant={
@@ -147,12 +183,12 @@ const TransactionForm = ({
             control={control}
             render={({ field }) => (
               <TextField {...field} id="カテゴリ" label="カテゴリ" select>
-                <MenuItem value={"食費"}>
-                  <ListItemIcon>
-                    <FastfoodIcon />
-                  </ListItemIcon>
-                  食費
-                </MenuItem>
+                {categories.map((category, index) => (
+                  <MenuItem key={index} value={`${category.label}`}>
+                    <ListItemIcon>{category.icon}</ListItemIcon>
+                    {category.label}
+                  </MenuItem>
+                ))}
               </TextField>
             )}
           />
@@ -179,6 +215,8 @@ const TransactionForm = ({
           <Button
             type="submit"
             variant="contained"
+            // currentType은 react-hook-form의 watch가 감시하고 있어 값이바뀌면
+            // 바뀐값을 대입한다.
             color={currentType === "income" ? "primary" : "error"}
             fullWidth
           >
