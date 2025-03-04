@@ -78,8 +78,8 @@ const TransactionForm = ({
   useEffect(() => {
     const newCategories =
       currentType === "expense" ? expenseCategories : IncomeCategories;
-    console.log(newCategories);
     setCategories(newCategories);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentType]);
 
   // useEffect를 활용해서 달력상의 날짜를 클릭했을때
@@ -198,7 +198,19 @@ const TransactionForm = ({
             name="amount"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="金額" type="number" />
+              <TextField
+                {...field}
+                // 값을 입력하면 문자열로 받아지기때문에 숫자타입으로 변경
+                onChange={(e) => {
+                  // 10은 10진법
+                  const newValue = parseInt(e.target.value, 10) || 0;
+                  field.onChange(newValue);
+                }}
+                // 실제 보일때는 value가 0일떄 빈문자열을 반환
+                value={field.value === 0 ? "" : field.value}
+                label="金額"
+                type="number"
+              />
             )}
           />
 
@@ -228,6 +240,6 @@ const TransactionForm = ({
   );
 };
 export default TransactionForm;
-function userForm() {
-  throw new Error("Function not implemented.");
-}
+// function userForm() {
+//   throw new Error("Function not implemented.");
+// }
