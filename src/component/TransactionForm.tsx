@@ -67,7 +67,7 @@ const TransactionForm = ({
 
   // }
   type UserFormDeValue = {
-    type: "income" | "expense";
+    type: "income" | "expense"; // < 얘가 정답임
     date: string;
     amount: number;
     content: string;
