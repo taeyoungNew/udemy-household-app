@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood"; //食事アイコン
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -22,6 +22,8 @@ import SavinsIcon from "@mui/icons-material/Savings";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { transactionSchema } from "../validations/schema";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
@@ -32,6 +34,7 @@ interface CategoryItem {
   label: IncomeCategory | ExpenseCategory;
   icon: JSX.Element; // Mui는 React의 컴포넌트이므로 해당 타입으로 지정
 }
+
 type IncomeExpense = "income" | "expense";
 
 const TransactionForm = ({
@@ -45,7 +48,7 @@ const TransactionForm = ({
     { label: "日用品", icon: <AlarmIcon fontSize="small" /> },
     { label: "住居費", icon: <AddHomeIcon fontSize="small" /> },
     { label: "交際費", icon: <Diversity3Icon fontSize="small" /> },
-    { label: "娯楽", icon: <SportsTennisIcon fontSize="small" /> },
+    { label: "娯楽費", icon: <SportsTennisIcon fontSize="small" /> },
     { label: "共通費", icon: <TrainIcon fontSize="small" /> },
   ];
 
@@ -54,18 +57,44 @@ const TransactionForm = ({
     { label: "副収入", icon: <SavinsIcon fontSize="small" /> },
     { label: "お小遣い", icon: <AddBusinessIcon fontSize="small" /> },
   ];
+  // enum TypeEnum {
+  //   income = "income",
+  //   expense = "expense",
+  // }
+  // enum CategoryEnum {
+
+  // }
+  type UserFormDeValue = {
+    type: "income" | "expense"; // < union얘가 정답임
+    date: string;
+    amount: number;
+    content: string;
+    category: ExpenseCategory | IncomeCategory | "";
+  };
 
   const [categories, setCategories] = useState(expenseCategories);
-  const { control, setValue, watch } = useForm({
+  const {
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<UserFormDeValue>({
     // 리액트훅폼의 각 네임마다 디폴트값을 할당할수 있다.
     defaultValues: {
       type: "expense",
       date: currentDay,
       amount: 0,
-      category: "",
       content: "",
+      category: "",
+      // defaultValues안에 들어가야 타입에러가 안뜸
     },
+    resolver: zodResolver(transactionSchema),
+    // resolver: async (data, context, option) => {
+    //   return zodResolver(transactionSchema);
+    // },
   });
+  console.log(errors);
 
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue("type", type);
@@ -88,6 +117,9 @@ const TransactionForm = ({
     setValue("date", currentDay);
   }, [currentDay, setValue]); // currentDay의 값이 변경되었을떄 useEffect가 실행
 
+  const onsubmit = (data: any) => {
+    console.log(data);
+  };
   return (
     <Box
       sx={{
@@ -122,7 +154,7 @@ const TransactionForm = ({
         </IconButton>
       </Box>
       {/* フォーム要素 */}
-      <Box component={"form"}>
+      <Box component={"form"} onSubmit={handleSubmit(onsubmit)}>
         {/* Stack안의 요소들이 균등하게 배치 */}
         <Stack spacing={2}>
           {/* 収支切り替えボタンをリアクトフックボタンで管理する */}

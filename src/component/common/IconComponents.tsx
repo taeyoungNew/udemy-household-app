@@ -18,7 +18,7 @@ const IconComponents: Record<IncomeCategory | ExpenseCategory, JSX.Element> = {
   住居費: <AddHomeIcon />,
   共通費: <TrainIcon />,
   副収入: <AddBusinessIcon />,
-  娯楽: <SportsTennisIcon />,
+  娯楽費: <SportsTennisIcon />,
   日用品: <AlarmIcon />,
   給与: <WorkIcon />,
 };
