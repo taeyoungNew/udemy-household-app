@@ -24,8 +24,6 @@ import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { transactionSchema } from "../validations/schema";
-import { EnumType } from "typescript";
-import { ZodEnum } from "zod";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
@@ -50,7 +48,7 @@ const TransactionForm = ({
     { label: "日用品", icon: <AlarmIcon fontSize="small" /> },
     { label: "住居費", icon: <AddHomeIcon fontSize="small" /> },
     { label: "交際費", icon: <Diversity3Icon fontSize="small" /> },
-    { label: "娯楽", icon: <SportsTennisIcon fontSize="small" /> },
+    { label: "娯楽費", icon: <SportsTennisIcon fontSize="small" /> },
     { label: "共通費", icon: <TrainIcon fontSize="small" /> },
   ];
 
@@ -59,19 +57,19 @@ const TransactionForm = ({
     { label: "副収入", icon: <SavinsIcon fontSize="small" /> },
     { label: "お小遣い", icon: <AddBusinessIcon fontSize="small" /> },
   ];
-  enum TypeEnum {
-    income = "income",
-    expense = "expense",
-  }
+  // enum TypeEnum {
+  //   income = "income",
+  //   expense = "expense",
+  // }
   // enum CategoryEnum {
 
   // }
   type UserFormDeValue = {
-    type: "income" | "expense"; // < 얘가 정답임
+    type: "income" | "expense"; // < union얘가 정답임
     date: string;
     amount: number;
     content: string;
-    category: EnumType;
+    category: ExpenseCategory | IncomeCategory | "";
   };
 
   const [categories, setCategories] = useState(expenseCategories);
@@ -118,6 +116,7 @@ const TransactionForm = ({
   useEffect(() => {
     setValue("date", currentDay);
   }, [currentDay, setValue]); // currentDay의 값이 변경되었을떄 useEffect가 실행
+
   const onsubmit = (data: any) => {
     console.log(data);
   };

@@ -5,7 +5,7 @@ export type ExpenseCategory =
   | "日用品"
   | "住居費"
   | "交際費"
-  | "娯楽"
+  | "娯楽費"
   | "共通費";
 
 export interface Transaction {
