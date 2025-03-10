@@ -24,6 +24,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { transactionSchema } from "../validations/schema";
+import { error } from "console";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
@@ -205,6 +206,10 @@ const TransactionForm = ({
                   slotProps={{
                     inputLabel: { shrink: true },
                   }}
+                  // useForm의 error가 값이 들어갔을때
+                  // !!을 붙여서 true를 반환한다.
+                  error={!!errors.date}
+                  helperText={errors.date?.message}
                 />
               );
             }}
@@ -242,6 +247,8 @@ const TransactionForm = ({
                 value={field.value === 0 ? "" : field.value}
                 label="金額"
                 type="number"
+                error={!!errors.amount}
+                helperText={errors.amount?.message}
               />
             )}
           />
@@ -251,7 +258,13 @@ const TransactionForm = ({
             name="content"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="内容" type="text" />
+              <TextField
+                {...field}
+                label="内容"
+                type="text"
+                error={!!errors.content}
+                helperText={errors.content?.message}
+              />
             )}
           />
 
