@@ -9,9 +9,10 @@ import { theme } from "./theme/theme";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { Transaction } from "./types/index";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import { formatMonth } from "./utils/formatting";
+import { Schema } from "./validations/schema";
 
 // Firestore에거인지 아닌지를 판단하는 타입가드
 function isFireStoreError(
@@ -64,6 +65,27 @@ function App() {
     // boolean값을 반환
     return tran.date.startsWith(formatMonth(currentMonth));
   });
+
+  // データをファイアーストアーに保存
+  const handleSaveTansaction = async (transaction: Schema) => {
+    try {
+      console.log("transaction = ", transaction);
+      // firestore에 데이터를 저장
+      // collection명을 실제 firebase store의 이름과 일치해야한단
+      const docRef = await addDoc(collection(db, "Transactions"), transaction);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      // firebase의 에러인지 아닌지를 구별
+      // firebase의 에러는 error오브젝트안에
+      // code와 message가 포함되어 있다.
+      if (isFireStoreError(error)) {
+        console.error("firebase에러: ", error);
+      } else {
+        console.error("일반 에러: ", error);
+      }
+    }
+  };
+
   return (
     // 어플 전체에 적용시키기위해
     // 그리고 별도로 브라우저에서 폰트를 import까지해야한다.
@@ -89,6 +111,7 @@ function App() {
                 <Home
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMonth={setCurrentMonth}
+                  onSaveTansaction={handleSaveTansaction}
                 />
               }
             ></Route>
