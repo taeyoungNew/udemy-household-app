@@ -20,16 +20,17 @@ import TrainIcon from "@mui/icons-material/Train";
 import WorkIcon from "@mui/icons-material/Work";
 import SavinsIcon from "@mui/icons-material/Savings";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { transactionSchema } from "../validations/schema";
+import { Schema, transactionSchema } from "../validations/schema";
 import { error } from "console";
 
 interface TransactionFormProp {
   onCloseForm: () => void;
   isEntryDrawerOpen: boolean;
   currentDay: string;
+  onSaveTansaction: (transaction: Schema) => Promise<void>;
 }
 interface CategoryItem {
   label: IncomeCategory | ExpenseCategory;
@@ -42,6 +43,7 @@ const TransactionForm = ({
   onCloseForm,
   isEntryDrawerOpen,
   currentDay,
+  onSaveTansaction,
 }: TransactionFormProp) => {
   const formWidth = 320;
   const expenseCategories: CategoryItem[] = [
@@ -80,7 +82,7 @@ const TransactionForm = ({
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm<UserFormDeValue>({
+  } = useForm<Schema>({
     // 리액트훅폼의 각 네임마다 디폴트값을 할당할수 있다.
     defaultValues: {
       type: "expense",
@@ -118,8 +120,10 @@ const TransactionForm = ({
     setValue("date", currentDay);
   }, [currentDay, setValue]); // currentDay의 값이 변경되었을떄 useEffect가 실행
 
-  const onsubmit = (data: any) => {
+  // React Hook Form에 상장인 타입설정
+  const onsubmit: SubmitHandler<Schema> = (data) => {
     console.log(data);
+    onSaveTansaction(data);
   };
   return (
     <Box
