@@ -82,6 +82,7 @@ const TransactionForm = ({
     watch,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<Schema>({
     // 리액트훅폼의 각 네임마다 디폴트값을 할당할수 있다.
     defaultValues: {
@@ -101,6 +102,7 @@ const TransactionForm = ({
 
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue("type", type);
+    setValue("category", "");
   };
 
   // 감시할 form의 이름을 인수로 넣는다.
@@ -124,6 +126,16 @@ const TransactionForm = ({
   const onsubmit: SubmitHandler<Schema> = (data) => {
     console.log(data);
     onSaveTansaction(data);
+
+    // react-hook-form에서 제공하는 reset메서드
+    // form의 데이터를 defaultValues로 리셋
+    reset({
+      type: "expense",
+      date: currentDay,
+      amount: 0,
+      content: "",
+      category: "",
+    });
   };
   return (
     <Box
