@@ -13,6 +13,7 @@ import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import { formatMonth } from "./utils/formatting";
 import { Schema } from "./validations/schema";
+import { log } from "console";
 
 // Firestore에거인지 아닌지를 판단하는 타입가드
 function isFireStoreError(
@@ -74,6 +75,13 @@ function App() {
       // collection명을 실제 firebase store의 이름과 일치해야한단
       const docRef = await addDoc(collection(db, "Transactions"), transaction);
       console.log("Document written with ID: ", docRef.id);
+
+      // 새로추가한 가계부내용을 바로 랜더링하기
+      const newTransaction = {
+        id: docRef.id,
+        ...transaction,
+      } as Transaction;
+      setTransactions((prevTrasaction) => [...prevTrasaction, newTransaction]);
     } catch (error) {
       // firebase의 에러인지 아닌지를 구별
       // firebase의 에러는 error오브젝트안에
