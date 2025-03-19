@@ -25,11 +25,13 @@ interface TransactionMenuProp {
   dailyTran: Transaction[];
   currentDay: string;
   onAddTranForm: () => void;
+  onSelectTransaction: (el: Transaction) => void;
 }
 const TransactionMenu = ({
   dailyTran,
   currentDay,
   onAddTranForm,
+  onSelectTransaction
 }: TransactionMenuProp) => {
   const menuDrawerWidth = 320;
   return (
@@ -88,6 +90,8 @@ const TransactionMenu = ({
               {dailyTran.map((el) => (
                 <ListItem key={el.id} disablePadding>
                   <Card
+                    onClick={() => onSelectTransaction(el)}
+                    // onClick={() => {console.log("click")}}
                     sx={{
                       width: "100%",
                       backgroundColor:

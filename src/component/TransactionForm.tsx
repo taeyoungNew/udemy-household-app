@@ -21,7 +21,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import SavinsIcon from "@mui/icons-material/Savings";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ExpenseCategory, IncomeCategory } from "../types";
+import { ExpenseCategory, IncomeCategory, Transaction } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Schema, transactionSchema } from "../validations/schema";
 import { error } from "console";
@@ -31,6 +31,7 @@ interface TransactionFormProp {
   isEntryDrawerOpen: boolean;
   currentDay: string;
   onSaveTansaction: (transaction: Schema) => Promise<void>;
+  selectedTransaction: Transaction | null;
 }
 interface CategoryItem {
   label: IncomeCategory | ExpenseCategory;
@@ -44,6 +45,7 @@ const TransactionForm = ({
   isEntryDrawerOpen,
   currentDay,
   onSaveTansaction,
+  selectedTransaction,
 }: TransactionFormProp) => {
   const formWidth = 320;
   const expenseCategories: CategoryItem[] = [
@@ -137,6 +139,18 @@ const TransactionForm = ({
       category: "",
     });
   };
+
+  useEffect(() => {
+    if(selectedTransaction) {
+      console.log(selectedTransaction.category)
+      setValue("type", selectedTransaction.type)
+      setValue("date", selectedTransaction.date)
+      setValue("amount", selectedTransaction.amount)
+      setValue("category", selectedTransaction.category)
+      setValue("content", selectedTransaction.content)
+    
+    }
+  }, [selectedTransaction])
   return (
     <Box
       sx={{

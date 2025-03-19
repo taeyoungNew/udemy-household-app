@@ -29,6 +29,9 @@ function isFireStoreError(
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  
+  
   // const dateFormat = format(currentMonth, "yyyy-MM");
 
   // データは初回レンダリング時のみ取得するためにuseEffectを利用
@@ -120,6 +123,8 @@ function App() {
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMonth={setCurrentMonth}
                   onSaveTansaction={handleSaveTansaction}
+                  selectedTransaction={selectedTransaction}
+                  setSelectedTransaction={setSelectedTransaction}
                 />
               }
             ></Route>
